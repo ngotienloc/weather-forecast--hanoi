@@ -27,6 +27,10 @@ const hanoiIcon = L.divIcon({
   iconAnchor: [7, 7]
 });
 
+// Northern Vietnam bounds
+const MAP_BOUNDS = [[20.0, 102.0], [24.5, 108.5]];
+const HANOI_POS = [21.0285, 105.8542];
+
 export default function RadarScreen() {
   const [radarData, setRadarData] = useState(null);
   const [frames, setFrames] = useState([]);
@@ -36,10 +40,6 @@ export default function RadarScreen() {
   const [error, setError] = useState(null);
   
   const playIntervalRef = useRef(null);
-
-  // Northern Vietnam bounds
-  const mapBounds = [[20.0, 102.0], [24.5, 108.5]];
-  const hanoiPos = [21.0285, 105.8542];
 
   // Fetch RainViewer config
   const fetchRainViewerData = async () => {
@@ -154,7 +154,7 @@ export default function RadarScreen() {
             minZoom={5}
             maxZoom={12}
           >
-            <MapBoundsController bounds={mapBounds} />
+            <MapBoundsController bounds={MAP_BOUNDS} />
             
             {/* CartoDB Dark Matter Tile Layer */}
             <TileLayer
@@ -176,7 +176,7 @@ export default function RadarScreen() {
             ))}
 
             {/* Hanoi marker */}
-            <Marker position={hanoiPos} icon={hanoiIcon}>
+            <Marker position={HANOI_POS} icon={hanoiIcon}>
               <Popup>
                 <div style={{ color: '#000', fontSize: '12px', fontWeight: '600' }}>Hà Nội</div>
               </Popup>
