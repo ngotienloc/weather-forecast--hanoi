@@ -31,10 +31,10 @@ const hanoiIcon = L.divIcon({
 const MAP_BOUNDS = [[20.0, 102.0], [24.5, 108.5]];
 const HANOI_POS = [21.0285, 105.8542];
 
-// Helper to get yesterday's date in YYYY-MM-DD format for NASA GIBS
-const getYesterdayDateString = () => {
+// Helper to get safe date in YYYY-MM-DD format for NASA GIBS (2 days ago to guarantee availability)
+const getSafeDateString = () => {
   const d = new Date();
-  d.setDate(d.getDate() - 1);
+  d.setDate(d.getDate() - 2);
   return d.toISOString().split('T')[0];
 };
 
@@ -105,7 +105,7 @@ export default function RadarScreen() {
   };
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', height: '100%', animation: 'fadeIn 0.3s ease-out' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', animation: 'fadeIn 0.3s ease-out', paddingBottom: '32px' }}>
       <div style={{ marginTop: '16px', marginBottom: '12px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <div>
           <h2 style={{ fontSize: '20px', fontWeight: '600', color: 'var(--text-primary)' }}>Bản đồ Radar</h2>
@@ -204,7 +204,7 @@ export default function RadarScreen() {
             {mapMode === 'nasa' && (
               <TileLayer
                 attribution='&copy; NASA GIBS'
-                url={`https://gibs.earthdata.nasa.gov/wmts/epsg3857/best/MODIS_Terra_CorrectedReflectance_TrueColor/default/${getYesterdayDateString()}/GoogleMapsCompatible_Level9/{z}/{x}/{y}.jpg`}
+                url={`https://gibs-{s}.earthdata.nasa.gov/wmts/epsg3857/best/MODIS_Terra_CorrectedReflectance_TrueColor/default/${getSafeDateString()}/GoogleMapsCompatible_Level9/{z}/{x}/{y}.jpg`}
                 maxNativeZoom={9}
                 maxZoom={12}
                 tileSize={256}
@@ -272,7 +272,7 @@ export default function RadarScreen() {
                 {mapMode === 'nasa' ? (
                   <>
                     <div style={{ fontSize: '13px', fontWeight: '700', color: 'var(--text-primary)' }}>
-                      Ảnh chụp: {getYesterdayDateString()}
+                      Ảnh chụp: {getSafeDateString()}
                     </div>
                     <div style={{ fontSize: '10px', color: 'var(--text-muted)' }}>
                       Ảnh vệ tinh mây tĩnh từ NASA GIBS
