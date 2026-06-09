@@ -27,7 +27,7 @@ export default function App() {
     try {
       setLoading(true);
       setError(null);
-      const res = await fetch("https://api.open-meteo.com/v1/forecast?latitude=21.0285&longitude=105.8542&current_weather=true&hourly=temperature_2m,precipitation_probability,weathercode,windspeed_10m&daily=temperature_2m_max,temperature_2m_min,weathercode,precipitation_sum&timezone=Asia%2FHo_Chi_Minh&forecast_days=8");
+      const res = await fetch("https://api.open-meteo.com/v1/forecast?latitude=21.0285&longitude=105.8542&current_weather=true&hourly=temperature_2m,apparent_temperature,visibility,precipitation_probability,weathercode,windspeed_10m&daily=temperature_2m_max,temperature_2m_min,weathercode,precipitation_sum&timezone=Asia%2FHo_Chi_Minh&forecast_days=8");
       if (!res.ok) throw new Error("Không thể kết nối tới máy chủ thời tiết");
       const data = await res.json();
       setWeatherData(data);

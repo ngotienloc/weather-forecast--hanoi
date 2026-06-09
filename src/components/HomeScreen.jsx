@@ -1,5 +1,5 @@
 import React from 'react';
-import { Sun, Cloud, CloudRain, CloudDrizzle, CloudLightning, CloudSnow, CloudFog, Droplets, Wind, AlertTriangle, Compass, Flame } from 'lucide-react';
+import { Sun, Cloud, CloudRain, CloudDrizzle, CloudLightning, CloudSnow, CloudFog, Droplets, Wind, AlertTriangle, Compass, Flame, Thermometer, Eye } from 'lucide-react';
 
 export const getWeatherInfo = (code) => {
   // WMO Weather Codes (https://open-meteo.com/en/docs)
@@ -40,6 +40,15 @@ export default function HomeScreen({ weatherData, settings, onNavigate }) {
   const todayMinC = weatherData.daily.temperature_2m_min[0];
   const todayMax = settings.tempUnit === 'C' ? todayMaxC : (todayMaxC * 9/5) + 32;
   const todayMin = settings.tempUnit === 'C' ? todayMinC : (todayMinC * 9/5) + 32;
+
+  // Apparent temperature ("Feels like")
+  const apparentTempC = hourly.apparent_temperature ? hourly.apparent_temperature[currentHourIndex] : tempC;
+  const apparentTempF = (apparentTempC * 9/5) + 32;
+  const apparentTemp = settings.tempUnit === 'C' ? apparentTempC : apparentTempF;
+
+  // Visibility (convert meters to km)
+  const visibilityM = hourly.visibility ? hourly.visibility[currentHourIndex] : 10000;
+  const visibilityKm = (visibilityM / 1000).toFixed(1);
 
   // Rain Alert Card logic:
   // Next 2 hours of precipitation probability data
@@ -142,7 +151,7 @@ export default function HomeScreen({ weatherData, settings, onNavigate }) {
         </div>
         
         <div style={{ fontSize: '14px', fontWeight: '500', color: 'var(--text-muted)' }}>
-          H: {Math.round(todayMax)}° &nbsp;•&nbsp; L: {Math.round(todayMin)}°
+          Cảm giác như {Math.round(apparentTemp)}° &nbsp;•&nbsp; H: {Math.round(todayMax)}° &nbsp;•&nbsp; L: {Math.round(todayMin)}°
         </div>
       </div>
 
@@ -233,21 +242,19 @@ export default function HomeScreen({ weatherData, settings, onNavigate }) {
         </div>
       </div>
 
-      {/* 2x2 Grid of Detailed Cards */}
+      {/* Grid of Detailed Cards (3 rows, 2 columns) */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '12px', marginTop: '12px' }}>
-        {/* Wind Speed Card */}
+        {/* Apparent Temperature Card */}
         <div className="card" style={{ marginTop: 0 }}>
           <div className="card-title">
-            <Wind size={14} />
-            GIÓ
+            <Thermometer size={14} />
+            CẢM GIÁC NHƯ
           </div>
-          <div style={{ fontSize: '20px', fontWeight: '700', color: 'var(--text-primary)', display: 'flex', alignItems: 'baseline', gap: '2px' }}>
-            {displayWindSpeed}
-            <span style={{ fontSize: '11px', fontWeight: '500', color: 'var(--text-muted)' }}>{windUnitStr}</span>
+          <div style={{ fontSize: '20px', fontWeight: '700', color: 'var(--text-primary)' }}>
+            {Math.round(apparentTemp)}°
           </div>
-          <div style={{ fontSize: '12px', color: 'var(--text-muted)', marginTop: '8px', display: 'flex', alignItems: 'center', gap: '4px' }}>
-            <Compass size={12} style={{ transform: `rotate(${current.winddirection}deg)`, color: 'var(--accent-color)' }} />
-            Hướng {current.winddirection}°
+          <div style={{ fontSize: '11px', color: 'var(--text-muted)', marginTop: '10px' }}>
+            Nhiệt độ cảm nhận thực tế
           </div>
         </div>
 
@@ -262,6 +269,22 @@ export default function HomeScreen({ weatherData, settings, onNavigate }) {
           </div>
           <div style={{ fontSize: '11px', color: 'var(--text-muted)', marginTop: '10px' }}>
             Điểm sương thích hợp
+          </div>
+        </div>
+
+        {/* Wind Speed Card */}
+        <div className="card" style={{ marginTop: 0 }}>
+          <div className="card-title">
+            <Wind size={14} />
+            GIÓ
+          </div>
+          <div style={{ fontSize: '20px', fontWeight: '700', color: 'var(--text-primary)', display: 'flex', alignItems: 'baseline', gap: '2px' }}>
+            {displayWindSpeed}
+            <span style={{ fontSize: '11px', fontWeight: '500', color: 'var(--text-muted)' }}>{windUnitStr}</span>
+          </div>
+          <div style={{ fontSize: '12px', color: 'var(--text-muted)', marginTop: '8px', display: 'flex', alignItems: 'center', gap: '4px' }}>
+            <Compass size={12} style={{ transform: `rotate(${current.winddirection}deg)`, color: 'var(--accent-color)' }} />
+            Hướng {current.winddirection}°
           </div>
         </div>
 
@@ -291,6 +314,20 @@ export default function HomeScreen({ weatherData, settings, onNavigate }) {
           </div>
           <div style={{ fontSize: '11px', color: 'var(--text-muted)', marginTop: '10px' }}>
             Dự tính trong ngày
+          </div>
+        </div>
+
+        {/* Visibility Card */}
+        <div className="card" style={{ marginTop: 0 }}>
+          <div className="card-title">
+            <Eye size={14} />
+            TẦM NHÌN
+          </div>
+          <div style={{ fontSize: '20px', fontWeight: '700', color: 'var(--text-primary)' }}>
+            {visibilityKm} km
+          </div>
+          <div style={{ fontSize: '11px', color: 'var(--text-muted)', marginTop: '10px' }}>
+            Độ trong suốt của không khí
           </div>
         </div>
       </div>
