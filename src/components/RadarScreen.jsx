@@ -174,10 +174,10 @@ export default function RadarScreen() {
           </button>
         </div>
       ) : (
-        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', position: 'relative', minHeight: '360px' }}>
+        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', position: 'relative', minHeight: '290px' }}>
           {/* Leaflet Map */}
           <MapContainer 
-            style={{ width: '100%', height: '360px', borderRadius: 'var(--radius-lg)', zIndex: 10 }}
+            style={{ width: '100%', height: '290px', borderRadius: 'var(--radius-lg)', zIndex: 10 }}
             zoom={7} 
             scrollWheelZoom={true}
             zoomControl={false}
@@ -204,7 +204,7 @@ export default function RadarScreen() {
             {mapMode === 'nasa' && (
               <TileLayer
                 attribution='&copy; NASA GIBS'
-                url={`https://gibs-{s}.earthdata.nasa.gov/wmts/epsg3857/best/MODIS_Terra_CorrectedReflectance_TrueColor/default/${getSafeDateString()}/GoogleMapsCompatible_Level9/{z}/{x}/{y}.jpg`}
+                url={`https://gibs-{s}.earthdata.nasa.gov/wmts/epsg3857/best/MODIS_Terra_CorrectedReflectance_TrueColor/default/${getSafeDateString()}/GoogleMapsCompatible_Level9/{z}/{y}/{x}.jpg`}
                 maxNativeZoom={9}
                 maxZoom={12}
                 tileSize={256}
