@@ -36,7 +36,7 @@ export default function ForecastScreen({ weatherData, settings }) {
     <div style={{ animation: 'fadeIn 0.3s ease-out' }}>
       <div style={{ marginTop: '16px', marginBottom: '16px' }}>
         <h2 style={{ fontSize: '20px', fontWeight: '600', color: 'var(--text-primary)' }}>Dự báo thời tiết</h2>
-        <p style={{ fontSize: '13px', color: 'var(--text-muted)' }}>Thời tiết Hà Nội trong 8 ngày tới</p>
+        <p style={{ fontSize: '13px', color: 'var(--text-muted)' }}>Thời tiết Aeon Mall Long Biên trong 8 ngày tới</p>
       </div>
 
       <div className="card" style={{ padding: '8px 16px' }}>

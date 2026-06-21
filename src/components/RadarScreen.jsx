@@ -29,7 +29,7 @@ const hanoiIcon = L.divIcon({
 
 // Northern Vietnam bounds
 const MAP_BOUNDS = [[20.0, 102.0], [24.5, 108.5]];
-const HANOI_POS = [21.0285, 105.8542];
+const HANOI_POS = [21.0274, 105.8988];
 
 export default function RadarScreen() {
   const [radarData, setRadarData] = useState(null);
@@ -207,10 +207,10 @@ export default function RadarScreen() {
               />
             ))}
 
-            {/* Hanoi marker */}
+            {/* Aeon Mall Long Bien marker */}
             <Marker position={HANOI_POS} icon={hanoiIcon}>
               <Popup>
-                <div style={{ color: '#000', fontSize: '12px', fontWeight: '600' }}>Hà Nội</div>
+                <div style={{ color: '#000', fontSize: '12px', fontWeight: '600' }}>Aeon Mall Long Biên</div>
               </Popup>
             </Marker>
           </MapContainer>

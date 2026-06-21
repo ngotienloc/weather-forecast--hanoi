@@ -13,42 +13,34 @@ export default function RainAlertScreen({ weatherData }) {
   let currentHourIndex = hourlyTimeArray.findIndex(t => t.startsWith(currentHourTimeStr.substring(0, 13)));
   if (currentHourIndex === -1) currentHourIndex = 0;
 
-  // Compile next 24 hours of rain probabilities
-  const next24Hours = [];
-  let maxProbability = 0;
-  let rainHoursCount = 0;
+  // Compile next 2 hours of rain probabilities (4 intervals of 30 minutes)
+  const prob0 = hourly.precipitation_probability[currentHourIndex] || 0;
+  const prob1 = hourly.precipitation_probability[currentHourIndex + 1] || 0;
+  const prob2 = hourly.precipitation_probability[currentHourIndex + 2] || 0;
 
-  for (let i = currentHourIndex; i < currentHourIndex + 24; i++) {
-    if (!hourlyTimeArray[i]) break;
-    const timeStr = hourlyTimeArray[i];
-    const hour = parseInt(timeStr.split('T')[1].split(':')[0]);
-    const displayHour = hour === 0 ? '12 AM' : hour === 12 ? '12 PM' : hour > 12 ? `${hour - 12} PM` : `${hour} AM`;
-    const prob = hourly.precipitation_probability[i] || 0;
-    
-    if (prob > maxProbability) maxProbability = prob;
-    if (prob > 20) rainHoursCount++;
+  const maxProbability = Math.max(prob0, prob1, prob2);
 
-    next24Hours.push({
-      time: displayHour,
-      prob: prob,
-      rawTime: timeStr
-    });
-  }
+  const next2Hours = [
+    { time: '0 - 30 phút', prob: prob0 },
+    { time: '30 - 60 phút', prob: Math.round((prob0 + prob1) / 2) },
+    { time: '60 - 90 phút', prob: prob1 },
+    { time: '90 - 120 phút', prob: Math.round((prob1 + prob2) / 2) }
+  ];
 
   // Generate localized status
   let alertTitle = 'Thời tiết khô ráo';
-  let alertDesc = 'Không tìm thấy khả năng mưa trong 24 giờ tới. Thích hợp cho các hoạt động ngoài trời.';
+  let alertDesc = 'Không tìm thấy khả năng mưa trong 2 giờ tới. Thích hợp cho các hoạt động ngoài trời.';
   let alertColor = 'var(--color-green)';
   let AlertIcon = ShieldCheck;
 
   if (maxProbability > 60) {
     alertTitle = 'Cảnh báo khả năng có mưa';
-    alertDesc = `Cảnh báo: Khả năng mưa lên tới ${maxProbability}% trong 24 giờ tới. Hãy mang theo ô hoặc áo mưa khi di chuyển ngoài đường.`;
+    alertDesc = `Cảnh báo: Khả năng mưa lên tới ${maxProbability}% trong 2 giờ tới. Hãy mang theo ô hoặc áo mưa khi di chuyển ngoài đường.`;
     alertColor = '#EF4444';
     AlertIcon = AlertCircle;
   } else if (maxProbability > 20) {
     alertTitle = 'Có thể có mưa nhẹ rải rác';
-    alertDesc = `Dự báo có mưa nhẹ rải rác ở vài thời điểm với tỷ lệ cao nhất khoảng ${maxProbability}%. Hãy chuẩn bị trước khi ra ngoài.`;
+    alertDesc = `Dự báo có mưa nhẹ rải rác ở vài thời điểm trong 2 giờ tới với tỷ lệ cao nhất khoảng ${maxProbability}%. Hãy chuẩn bị trước khi ra ngoài.`;
     alertColor = '#FBBF24';
     AlertIcon = AlertCircle;
   }
@@ -57,7 +49,7 @@ export default function RainAlertScreen({ weatherData }) {
     <div style={{ animation: 'fadeIn 0.3s ease-out' }}>
       <div style={{ marginTop: '16px', marginBottom: '16px' }}>
         <h2 style={{ fontSize: '20px', fontWeight: '600', color: 'var(--text-primary)' }}>Báo cáo lượng mưa</h2>
-        <p style={{ fontSize: '13px', color: 'var(--text-muted)' }}>Cập nhật lượng mưa thời gian thực tại Hà Nội</p>
+        <p style={{ fontSize: '13px', color: 'var(--text-muted)' }}>Cập nhật lượng mưa thời gian thực tại Aeon Mall Long Biên</p>
       </div>
 
       {/* Main Alert Card */}
@@ -75,15 +67,15 @@ export default function RainAlertScreen({ weatherData }) {
         </div>
       </div>
 
-      {/* 24 Hour Probability List */}
+      {/* 2 Hour Probability List */}
       <div className="card">
-        <div className="card-title">DỰ BÁO LƯỢNG MƯA 24 GIỜ</div>
+        <div className="card-title">DỰ BÁO LƯỢNG MƯA 2 GIỜ TỚI</div>
         <p style={{ fontSize: '12px', color: 'var(--text-muted)', marginBottom: '16px' }}>
-          Biểu đồ tỷ lệ phần trăm cơ hội xuất hiện mưa theo giờ
+          Biểu đồ tỷ lệ phần trăm cơ hội xuất hiện mưa ngắn hạn (trong 2 giờ tới)
         </p>
 
         <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', maxHeight: '350px', overflowY: 'auto', paddingRight: '4px' }}>
-          {next24Hours.map((item, idx) => {
+          {next2Hours.map((item, idx) => {
             const isNow = idx === 0;
             // Bar color based on probability
             let barColor = 'rgba(255, 255, 255, 0.1)';
@@ -100,8 +92,8 @@ export default function RainAlertScreen({ weatherData }) {
             return (
               <div key={idx} style={{ display: 'flex', alignItems: 'center', fontSize: '13px' }}>
                 {/* Time */}
-                <div style={{ width: '55px', fontWeight: isNow ? '700' : '400', color: isNow ? 'var(--text-primary)' : 'var(--text-muted)' }}>
-                  {isNow ? 'Bây giờ' : item.time}
+                <div style={{ width: '90px', fontWeight: isNow ? '700' : '400', color: isNow ? 'var(--text-primary)' : 'var(--text-muted)' }}>
+                  {item.time}
                 </div>
 
                 {/* Percentage display */}

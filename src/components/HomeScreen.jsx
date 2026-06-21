@@ -131,7 +131,7 @@ export default function HomeScreen({ weatherData, settings, onNavigate }) {
     <div style={{ animation: 'fadeIn 0.3s ease-out' }}>
       {/* Hero Header Area */}
       <div style={{ textAlign: 'center', marginTop: '16px', marginBottom: '24px' }}>
-        <h1 style={{ fontSize: '22px', fontWeight: '500', color: 'var(--text-primary)', marginBottom: '4px' }}>Hà Nội</h1>
+        <h1 style={{ fontSize: '22px', fontWeight: '500', color: 'var(--text-primary)', marginBottom: '4px' }}>Aeon Mall Long Biên</h1>
         <p style={{ fontSize: '13px', color: 'var(--text-muted)', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px' }}>
           <weatherInfo.icon size={16} style={{ color: weatherInfo.color }} />
           {weatherInfo.name}
